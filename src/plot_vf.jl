@@ -160,3 +160,24 @@ function get_shadow(mym, target, source, mat)
     println("    hits between ",minimum(hits[:,1])," and ",maximum(hits[:,1]))
     return shadow
 end
+
+function plot_faces_with_colors(mym, val; faces = 1:size(mym.elements2faces,1))
+    # plot faces with individual element colors
+    scene = Scene(resolution = (1920,1080))
+    max = maximum(val)
+    min = minimum(val)
+    val4plot = val .- min
+    val4plot = val4plot ./ (max-min)
+    println("plotting values between ", min, " and ", max)
+    n_faces = size(faces,1)
+    for i = 1 : n_faces
+        f = faces[i]
+        e1 = mym.elements2faces[f,3]
+        e2 = mym.elements2faces[f,4]
+        colors = hcat(val4plot[e1:e2,1], val4plot[e1:e2,1], val4plot[e1:e2,1])
+        plot_face_elementcolor(scene, mym, f, colors)  
+    end
+    axis_appearance(scene)
+    # user_view(scene)
+    display(scene)
+end

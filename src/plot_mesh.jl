@@ -63,12 +63,14 @@ function plot_nvec(scene, mym, e1, e2; color = :red)
     u = mym.nvec[e1:e2,1]
     v = mym.nvec[e1:e2,2]
     w = mym.nvec[e1:e2,3]
-    v_scale = 0.1 # default 0.1 # ofk 0.0001
+    v_scale = 1 # default 0.1 # ofk 0.0001
     a_scale = 0.01 # default 0.01 # ofk 0.00001
     u .*= v_scale
     v .*= v_scale
     w .*= v_scale
-    arrows!(scene, x, y, z, u, v, w, arrowsize = a_scale, linecolor = color, arrowcolor = color)
+    # arrows!(scene, x, y, z, u, v, w, arrowsize = a_scale, linecolor = color, arrowcolor = color)
+    # arrows!(scene, x, y, z, u, v, w, arrowsize = Vec3f0(0.03, 0.03, 0.04), lengthscale = 0.03, linewidth = 0.005, linecolor = color, arrowcolor = color)
+    arrows!(scene, x, y, z, u, v, w, arrowsize = a_scale, lengthscale = 0.05, linewidth = 0.003, linecolor = color, arrowcolor = color)
 end
 
 function plot_mesh_parts(mym; parts = 1:size(mym.elements2parts,1), shownvec = false)
@@ -78,7 +80,7 @@ function plot_mesh_parts(mym; parts = 1:size(mym.elements2parts,1), shownvec = f
     for i = 1 : n_parts
         p = parts[i]
         randcolor = RGBAf0(rand(), rand(), rand())
-        plot_part(scene, mym, p, color = randcolor, shownvec = shownvec)
+        plot_part(scene, mym, p, color = randcolor, alpha = 0.6, shownvec = shownvec)
     end
     axis_appearance(scene)
     # user_view(scene)

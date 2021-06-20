@@ -30,4 +30,6 @@ module FARADS_PLOT
     # for testing
     export plot_connection_line!, plot_mark_elements!
 
+    export plot_faces_with_colors
+
 end
