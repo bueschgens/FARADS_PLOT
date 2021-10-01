@@ -82,8 +82,8 @@ end
 function plot_occupied_buckets!(scene, myb::OccBuckets; buckets = 1:size(myb.volumes,1))
     # plot all occupied buckets in active scene
     # get occupied buckets
-    bo = collect(1:1:size(myb.occupied,1))
-    bo4plot = bo[myb.occupied[:] .== 1]
+    bo = collect(buckets)
+    bo4plot = bo[myb.occupied[buckets] .== 1]
     # plot occupied buckets
     for i in bo4plot
         randcolor = RGBAf0(1.0, rand(), rand()) # shade of red
