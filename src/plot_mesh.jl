@@ -39,10 +39,10 @@ end
 
 function plot_part(scene, mym, part; color = :blue, alpha = 0.1, shownvec = false)
     # plot one part
-    if part == 3
-        color = :red
-        alpha = 0.6
-    end
+    # if part == 3
+    #     color = :red
+    #     alpha = 0.6
+    # end
     n1 = mym.nodes2parts[part,3]
     n2 = mym.nodes2parts[part,4]
     nodes = mym.nodes[n1:n2,1:3]
