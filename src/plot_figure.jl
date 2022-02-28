@@ -1,4 +1,5 @@
 function create_empty_figure(res1, res2; font = "Arial", fontsize = 20)
+    # TO DO: add figure_padding in here as keyword
     fig = Figure(resolution = (res1, res2), font = font, fontsize = fontsize)
     # ax = fig[1, 1] = Axis3(fig)
     ax = Axis3(fig[1, 1])
