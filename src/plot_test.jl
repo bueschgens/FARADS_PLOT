@@ -15,12 +15,3 @@ function plot_mark_elements!(scene, mym, markers; color = :cyan)
         poly!(scene, nodes, mym.elements[i,:], color = (color, 0.6), strokecolor = (:black, 0.6), strokewidth = 3)
     end
 end
-
-function save_scene_as_png(scene, filename)
-    # save scene as png
-    save(filename*".png", scene)
-    println("scene saved as ",filename,".png")
-end
-
-
-
