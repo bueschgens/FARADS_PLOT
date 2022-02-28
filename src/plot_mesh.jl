@@ -1,17 +1,19 @@
 
-function user_view(scene)
-    point = [0.0, 0.0, 0.0]
-    zoom_step = 2
-    zoom!(scene, point, zoom_step, false)
+function user_view(scene; point = [0.0, 0.0, 0.0], zoom_step = 2, rotation = Quaternionf0(0.0, 0.0, 1.0, 0.0))
+    # point = [0.0, 0.0, 0.0]
+    # zoom_step = 2
+    # zoom!(scene, point, zoom_step, false)
+    # rotate!(scene, rotation)
+
     # zoom!(scene, [0.0, 0.0, 0.0], 2, true)
-    # eyepos = Vec3f0(0.0005, 0.0005, 0.01) # wo steht die cam
-    # lookat = Vec3f0(0, 0, 0) # auf welchen Punkt schaut die cam
-    # update_cam!(scene, eyepos, lookat)
+    eyepos = Vec3f0(0.0005, 0.0005, 0.01) # wo steht die cam
+    lookat = Vec3f0(0, 0, 0) # auf welchen Punkt schaut die cam
+    update_cam!(scene, eyepos, lookat)
     # save("out.png", scene)
     # save("testbild10.jpeg", scene, resolution = (1920,1080))
 end
 
-function axis_appearance(scene)
+function axis_appearance(scene; fontsize = 10)
     # axis = scene[Axis] # get axis
     # camera = cam3d!
     # limits = Rect([0,0,0],[1,1,1])
@@ -23,13 +25,21 @@ function axis_appearance(scene)
     Q2 = Quaternionf0(0.0, 0.0, 0.71, 0.71)
     Q3 = Quaternionf0(-0.5, 0.5, 0.5, 0.5)
     axis[:names, :rotation] = (Q1, Q2, Q3)
-    axis[:names, :textsize] = 10
+    axis[:names, :textsize] = fontsize
     axis[:names, :font] = "arial"
-    axis[:ticks, :textsize] = 10
+    axis[:ticks, :textsize] = fontsize
     axis[:ticks, :font] =  "arial"
     axis[:ticks, :textcolor] = :black
     # axis[:names, :align] = ((:left, :center),(:right, :center),(:right, :center))
     # axis[:names, :gap] = 20
+    # newly added
+    axis[:frame, :linecolor] = :red
+    axis[:frame, :axiscolor] = :red
+    axis[:frame, :linewidth] = 2.0
+    axis[:showaxis] = (true, true, true)
+    axis[:showticks] = (true, true, true)
+    axis[:showgrid] = (true, true, true)
+    axis[:scale] = (true, true, true)
 end
 
 function create_empty_scene(res1, res2)

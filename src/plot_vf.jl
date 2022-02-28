@@ -181,3 +181,20 @@ function plot_faces_with_colors(mym, val; faces = 1:size(mym.elements2faces,1))
     # user_view(scene)
     display(scene)
 end
+
+function plot_faces_with_colors!(scene, mym, val; faces = 1:size(mym.elements2faces,1))
+    # plot faces with individual element colors
+    max = maximum(val)
+    min = minimum(val)
+    val4plot = val .- min
+    val4plot = val4plot ./ (max-min)
+    println("plotting values between ", min, " and ", max)
+    n_faces = size(faces,1)
+    for i = 1 : n_faces
+        f = faces[i]
+        e1 = mym.elements2faces[f,3]
+        e2 = mym.elements2faces[f,4]
+        colors = hcat(val4plot[e1:e2,1], val4plot[e1:e2,1], val4plot[e1:e2,1])
+        plot_face_elementcolor(scene, mym, f, colors)  
+    end
+end

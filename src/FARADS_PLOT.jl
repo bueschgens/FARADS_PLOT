@@ -31,7 +31,11 @@ module FARADS_PLOT
     export plot_connection_line!, plot_mark_elements!
 
     export plot_faces_with_colors
+    export plot_faces_with_colors!
 
     export plot_nvec
+
+    export save_scene_as_png
+    export user_view
 
 end

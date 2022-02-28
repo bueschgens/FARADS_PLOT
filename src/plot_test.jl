@@ -16,6 +16,11 @@ function plot_mark_elements!(scene, mym, markers; color = :cyan)
     end
 end
 
+function save_scene_as_png(scene, filename)
+    # save scene as png
+    save(filename*".png", scene)
+    println("scene saved as ",filename,".png")
+end
 
 
 
