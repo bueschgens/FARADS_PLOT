@@ -198,3 +198,26 @@ function plot_faces_with_colors!(scene, mym, val; faces = 1:size(mym.elements2fa
         plot_face_elementcolor(scene, mym, f, colors)  
     end
 end
+
+function plot_existing_vf_on_faces!(scene, mym, mat, elem; faces = 1:size(mym.elements2faces,1), strokewidth = strokewidth, alpha_unseen = 0.5, alpha_seen = 0.5, color_unseen = :grey, color_seen = :red)
+    # plots all existing vf of elem in existing scene
+    vf = vec(mat[elem,:])
+    n_faces = size(faces,1)
+    for i = 1 : n_faces
+        f = faces[i]
+        p = get_part_of_face(mym, f)
+        n1 = mym.nodes2parts[p,3]
+        n2 = mym.nodes2parts[p,4]
+        nodes = mym.nodes[n1:n2,1:3]
+        e1 = mym.elements2faces[f,3]
+        e2 = mym.elements2faces[f,4]
+        elements = mym.elements[e1:e2,1:3]
+        vf_split = vf[e1:e2]
+        # plot all seen elements
+        seen = findall(x -> x > 0, vf_split)
+        poly!(scene, nodes, elements[seen,:], color = (color_seen, alpha_seen), strokecolor = (:black, 0.6), strokewidth = strokewidth)
+        # plot all unseen elements
+        unseen = findall(x -> x == 0, vf_split)
+        poly!(scene, nodes, elements[unseen,:], color = (color_unseen, alpha_unseen), strokecolor = (:black, 0.6), strokewidth = strokewidth)
+    end
+end

@@ -45,4 +45,6 @@ module FARADS_PLOT
 
     export plot_nvec
 
+    export plot_existing_vf_on_faces!
+
 end
