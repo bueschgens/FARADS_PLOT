@@ -1,7 +1,13 @@
 
-function plot_connection_line!(scene, mym, elem1, elem2; color = :green, linewidth = 4, alpha = 0.6)
+function plot_connection_line!(scene, mym, elem1::T, elem2::T; color = :green, linewidth = 4, alpha = 0.6) where T<:Integer
     # connect 2 elements with line (based on com)
     lines = [Point3f0(mym.com[elem1,:]) => Point3f0(mym.com[elem2,:])]
+    linesegments!(scene, lines, color = (color, alpha), linewidth = linewidth)
+end
+
+function plot_connection_line!(scene, mym, elem::T1, point::Vector{T2}; color = :green, linewidth = 4, alpha = 0.6) where {T1<:Integer, T2<:AbstractFloat}
+    # connect 2 elements with line (based on com)
+    lines = [Point3f0(mym.com[elem,:]) => Point3f0(point[:])]
     linesegments!(scene, lines, color = (color, alpha), linewidth = linewidth)
 end
 
