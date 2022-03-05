@@ -39,7 +39,7 @@ function plot_buckets(myb; buckets = 1:size(myb.volumes,1))
     display(scene)
 end
 
-function plot_buckets!(scene, myb; buckets = 1:size(myb.volumes,1))
+function plot_buckets!(scene, myb; buckets = 1:size(myb.volumes,1), linewidth = 3, alpha = 0.2, color = :black)
     # plotting empty buckets in active scene
     nb = size(buckets,1)
     bucketlines = Vector{Pair{Point{3,Float32},Point{3,Float32}}}(undef,nb*12)
@@ -50,7 +50,7 @@ function plot_buckets!(scene, myb; buckets = 1:size(myb.volumes,1))
         bucketlines[counter:counter+11] = get_bucketlines(myb, i)
         counter += 11
     end
-    linesegments!(scene, bucketlines, color = (:black, 0.2), linewidth = 3)
+    linesegments!(scene, bucketlines, color = (color, alpha), linewidth = linewidth)
 end
 
 function plot_element_with_circumcircle(mym::Mesh3D, myc::Circles, elem::T2) where T2<:Integer
@@ -79,16 +79,23 @@ function get_bucketsvec(myb, i)
     return orig, dir
 end
 
-function plot_occupied_buckets!(scene, myb::OccBuckets; buckets = 1:size(myb.volumes,1))
+function plot_occupied_buckets!(scene, myb::OccBuckets; buckets = 1:size(myb.volumes,1), transparency = true, alpha = 1.0, color = "random", withlines = false, linewidth_lines = 3, alpha_lines = 0.2, color_lines = :black)
     # plot all occupied buckets in active scene
     # get occupied buckets
     bo = collect(buckets)
     bo4plot = bo[myb.occupied[buckets] .== 1]
     # plot occupied buckets
     for i in bo4plot
-        randcolor = RGBAf0(1.0, rand(), rand()) # shade of red
+        if color == "random"
+            randcolor = RGBAf0(1.0, rand(), rand()) # shade of red
+        elseif typeof(color) == Symbol
+            randcolor = color
+        end
         borig, bdir = get_bucketsvec(myb, i)
-        mesh!(scene, FRect3D(borig, bdir), color = (randcolor, 1.0), transparency = true)
+        mesh!(scene, FRect3D(borig, bdir), color = (randcolor, alpha), transparency = transparency)
+    end
+    if withlines == true
+        plot_buckets!(scene, myb, buckets = bo4plot, linewidth = linewidth_lines, alpha = alpha_lines, color = color_lines)
     end
 end
 
