@@ -118,7 +118,7 @@ function plot_buckets_with_elements(mym::Mesh3D, myb::OccBuckets, buckets)
     display(scene)
 end
 
-function plot_buckets_with_elements!(scene, mym::Mesh3D, myb::OccBuckets, buckets)
+function plot_buckets_with_elements!(scene, mym::Mesh3D, myb::OccBuckets, buckets; color = :magenta, alpha = 0.5, strokewidth = 3)
     # plots bucket(s) with its/their elements inside in active scene
     for i in buckets
         bucketlines = get_bucketlines(myb, i)
@@ -129,7 +129,7 @@ function plot_buckets_with_elements!(scene, mym::Mesh3D, myb::OccBuckets, bucket
             n2 = mym.nodes2parts[e_p,4]
             nodes = mym.nodes[n1:n2,1:3]
             elements = mym.elements[i_e,:]
-            poly!(scene, nodes, elements, color = (:magenta, 0.5), strokecolor = (:black, 0.6), strokewidth = 3)
+            poly!(scene, nodes, elements, color = (color, alpha), strokecolor = (:black, 0.6), strokewidth = strokewidth)
         end
     end
 end
