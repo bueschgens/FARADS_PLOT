@@ -40,6 +40,7 @@ module FARADS_PLOT
     export quality_plot_vf
     export plot_shadow_target_to_source
     export plot_faces_with_colors, plot_faces_with_colors!
+    export plot_faces_with_colored_refinement!
 
     export plot_connection_line!, plot_mark_elements!
 

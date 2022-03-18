@@ -100,8 +100,8 @@ function quality_plot_vf(mat, mym; faces = false)
     end
 end
 
-function plot_face_elementcolor(scene, mym, face, elementcolors)
-    # plot face -> all elements seperatly with individual color
+function plot_face_elementcolor_bw(scene, mym, face, elementcolors)
+    # plot face -> all elements seperatly with individual color - black and white
     p = get_part_of_face(mym, face)
     n1 = mym.nodes2parts[p,3]
     n2 = mym.nodes2parts[p,4]
@@ -116,6 +116,22 @@ function plot_face_elementcolor(scene, mym, face, elementcolors)
     end
 end
 
+
+function plot_face_elementcolor(scene, mym, face, elementcolors; strokewidth = strokewidth, alpha = alpha)
+    # plot face -> all elements seperatly with individual color
+    p = get_part_of_face(mym, face)
+    n1 = mym.nodes2parts[p,3]
+    n2 = mym.nodes2parts[p,4]
+    nodes = mym.nodes[n1:n2,1:3]
+    e1 = mym.elements2faces[face,3]
+    e2 = mym.elements2faces[face,4]
+    elements = mym.elements[e1:e2,1:3]
+    for i = 1:size(elements,1)
+        elementcolor = elementcolors[i,1]
+        poly!(scene, nodes, elements[i,:], color = elementcolor, strokecolor = (:black, alpha), strokewidth = strokewidth)
+    end
+end
+
 function plot_shadow_target_to_source(mym, target, source, mat)
 
     scene = Scene(resolution=(1920,1080))
@@ -123,7 +139,7 @@ function plot_shadow_target_to_source(mym, target, source, mat)
     # plot target
     shadow = get_shadow(mym, target, source, mat)
     shadowcolors = hcat(shadow[:,1], shadow[:,1], shadow[:,1])
-    plot_face_elementcolor(scene, mym, target, shadowcolors)
+    plot_face_elementcolor_bw(scene, mym, target, shadowcolors)
 
     # plot source
     plot_face(scene, mym, source; color = :yellow, alpha = 0.6)
@@ -175,7 +191,7 @@ function plot_faces_with_colors(mym, val; faces = 1:size(mym.elements2faces,1))
         e1 = mym.elements2faces[f,3]
         e2 = mym.elements2faces[f,4]
         colors = hcat(val4plot[e1:e2,1], val4plot[e1:e2,1], val4plot[e1:e2,1])
-        plot_face_elementcolor(scene, mym, f, colors)  
+        plot_face_elementcolor_bw(scene, mym, f, colors)  
     end
     axis_appearance(scene)
     # user_view(scene)
@@ -195,11 +211,33 @@ function plot_faces_with_colors!(scene, mym, val; faces = 1:size(mym.elements2fa
         e1 = mym.elements2faces[f,3]
         e2 = mym.elements2faces[f,4]
         colors = hcat(val4plot[e1:e2,1], val4plot[e1:e2,1], val4plot[e1:e2,1])
-        plot_face_elementcolor(scene, mym, f, colors)  
+        plot_face_elementcolor_bw(scene, mym, f, colors)  
     end
 end
 
-function plot_existing_vf_on_faces!(scene, mym, mat, elem; faces = 1:size(mym.elements2faces,1), strokewidth = strokewidth, alpha_unseen = 0.5, alpha_seen = 0.5, color_unseen = :grey, color_seen = :red)
+function plot_faces_with_colored_refinement!(scene, mym, val; faces = 1:size(mym.elements2faces,1), colormap = :viridis, strokewidth = 3, alpha = 0.6)
+    # plot faces with individual element colors
+    # val is here a vector with numbers from 0 to 5
+    # according to the 5 refinement modi and 0 for no refinement
+    # given here for one specific element to all others specified by faces
+    # calculated by setting up refinement modus as save in vfmat
+    colors_modi = to_colormap(colormap, 6) # 5 refinement modi with 0
+    val4plot = Int.(val) .+ 1 # necessary for entry 0
+    colors = Vector{Any}(undef,size(val,1))
+    for i = 1:size(val,1)
+        colors[i] = colors_modi[val4plot[i]]
+    end
+    n_faces = size(faces,1)
+    for i = 1 : n_faces
+        f = faces[i]
+        e1 = mym.elements2faces[f,3]
+        e2 = mym.elements2faces[f,4]
+        colors = colors[e1:e2,1]
+        plot_face_elementcolor(scene, mym, f, colors, strokewidth = strokewidth, alpha = alpha)  
+    end
+end
+
+function plot_existing_vf_on_faces!(scene, mym, mat, elem; faces = 1:size(mym.elements2faces,1), strokewidth = 3, alpha_unseen = 0.5, alpha_seen = 0.5, color_unseen = :grey, color_seen = :red)
     # plots all existing vf of elem in existing scene
     vf = vec(mat[elem,:])
     n_faces = size(faces,1)
